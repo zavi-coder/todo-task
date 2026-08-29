@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Todo App</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 400px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px #ccc;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .input-box {
+            display: flex;
+            gap: 8px;
+        }
+
+        #taskInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #addBtn {
+            padding: 10px 15px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #addBtn:hover {
+            background-color: #555;
+        }
+
+        ul {
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .task {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .done {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .delete {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Todo App</h1>
+
+        <div class="input-box">
+            <input type="text" id="taskInput" placeholder="Enter your task">
+            <button id="addBtn">Add</button>
+        </div>
+
+        <ul id="taskList"></ul>
+
+    </div>
+
+
+    <script>
+
+        let tasks = [];
+
+        let input = document.getElementById("taskInput");
+        let addBtn = document.getElementById("addBtn");
+        let list = document.getElementById("taskList");
+
+
+        addBtn.onclick = function() {
+
+            let value = input.value.trim();
+
+            if (value == "") {
+                alert("Please enter a task");
+                return;
+            }
+
+            let newTask = {
+                id: Date.now(),
+                name: value,
+                completed: false
+            };
+
+            tasks.push(newTask);
+
+            input.value = "";
+
+            displayTasks();
+        };
+
+
+        function displayTasks() {
+
+            list.innerHTML = "";
+
+            tasks.forEach(function(task) {
+
+                let li = document.createElement("li");
+
+                let check = document.createElement("input");
+                check.type = "checkbox";
+                check.checked = task.completed;
+
+
+                let taskName = document.createElement("span");
+                taskName.innerText = task.name;
+                taskName.className = "task";
+
+
+                if (task.completed) {
+                    taskName.classList.add("done");
+                }
+
+
+                check.onchange = function() {
+
+                    task.completed = check.checked;
+
+                    displayTasks();
+                };
+
+
+                let deleteBtn = document.createElement("button");
+
+                deleteBtn.innerText = "Delete";
+                deleteBtn.className = "delete";
+
+
+                deleteBtn.onclick = function() {
+
+                    tasks = tasks.filter(function(item) {
+                        return item.id != task.id;
+                    });
+
+                    displayTasks();
+                };
+
+
+                li.appendChild(check);
+                li.appendChild(taskName);
+                li.appendChild(deleteBtn);
+
+                list.appendChild(li);
+
+            });
+        }
+
+    </script>
+
+</body>
+</html>
+
